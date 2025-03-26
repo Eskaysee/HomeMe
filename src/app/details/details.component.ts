@@ -48,7 +48,6 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 
 export class DetailsComponent {
-  housingLocationId = -1;
   route: ActivatedRoute = inject(ActivatedRoute);
   housingService = inject(HousingService);
   housingLocation: HousingLocation | undefined;
@@ -60,8 +59,13 @@ export class DetailsComponent {
   });
 
   constructor() {
-    this.housingLocationId = Number(this.route.snapshot.params['id']);
-    this.housingLocation = this.housingService.getHousingLocationById(this.housingLocationId);
+    const housingLocationId = parseInt(this.route.snapshot.params['id'], 10);
+
+    this.housingService.getHousingLocationById(housingLocationId).then(
+      (housingLocation: HousingLocation | undefined) => {
+        this.housingLocation = housingLocation;
+      }
+    )
   }
 
   submitApplication() {
